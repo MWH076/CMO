@@ -1,0 +1,26 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.dashboard-card {
+    margin-bottom: 1rem;
+}
+
+.log-area {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.status-info {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.status-info .badge {
+    margin-bottom: 0.5rem;
+}
+
+.achievement-card {
+    margin-top: 1rem;
+}
