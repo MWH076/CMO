@@ -5,19 +5,19 @@
     <!-- Meta -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Count Me Out" property="og:title" />
-    <meta content="Unreleased Beta (V0.05.2)" property="og:description" />
+    <meta content="Watt the Click?" property="og:title" />
+    <meta content="A clicker game." property="og:description" />
     <meta content="https://MWH076.github.io/CMO/" property="og:url" />
     <meta content="https://github.com/MWH076/CMO/blob/main/Assets/Images/logo.png?raw=true" property="og:image" />
     <meta content="#FF90AA" data-react-helmet="true" name="theme-color" />
 
     <!-- Tab -->
     <link rel="icon" type="image/x-icon" href="Assets/Images/logo.png">
-    <title>Count Me Out - Beta (V0.05.2)</title>
+    <title>Count Me Out</title>
 
     <!-- Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@webpixels/css@1.2.6/dist/index.css">
     <link rel="stylesheet" href="Assets/Styles/index.css">
 
     <!-- Scripts -->
@@ -34,26 +34,113 @@
             <div class="col-md-8">
                 <div class="card shadow-sm dashboard-card">
                     <div class="card-body">
-                        <h3 class="card-title text-center">Count Me Out - Beta</h3>
-                        <div class="status-info text-center mb-3">
-                            <span class="badge bg-primary">Level: <span id="currentLevel">1</span></span>
-                            <span class="badge bg-secondary">Attempts Left: <span id="currentAttempts">3</span></span>
-                            <span class="badge bg-info">Number Range: 1 to <span id="maxNumber">5</span></span>
-                            <span class="badge bg-warning">Time Elapsed: <span id="timeElapsed">0</span> s</span>
-                            <span class="badge bg-success">Coins: <span id="coins">0</span></span>
+                        <h3 class="card-title text-center">Count Me Out</h3>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-body pb-5">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-1">
+                                                <span class="d-block font-semibold text-sm text-heading"><span
+                                                        id="currentLevel">1</span></span>
+                                                <div class="text-xs text-muted"><span id="currentLevel">Level</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-body pb-5">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-1">
+                                                <span class="d-block font-semibold text-sm text-heading"><span
+                                                        id="currentAttempts">4</span></span>
+                                                <div class="text-xs text-muted">Moves Left</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-body pb-5">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-1">
+                                                <span class="d-block font-semibold text-sm text-heading">1 to <span
+                                                        id="maxNumber">10</span></span>
+                                                <div class="text-xs text-muted">Guess Range</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-body pb-5">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-1">
+                                                <span class="d-block font-semibold text-sm text-heading"><span
+                                                        id="timeElapsed">0</span>s</span>
+                                                <div class="text-xs text-muted">Time Taken</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-body pb-5">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-1">
+                                                <span class="d-block font-semibold text-sm text-heading"><span
+                                                        id="coins">0</span></span>
+                                                <div class="text-xs text-muted">Coins</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="guessInput" class="form-label">Your Guess:</label>
-                            <input type="number" class="form-control" id="guessInput" placeholder="Enter your guess"
-                                disabled>
+                        <div class="d-flex gap-3">
+                            <div class="input-group input-group-sm input-group-inline">
+                                <span class="input-group-text pe-2"><i class="bi bi-123"></i></span>
+                                <input type="number" class="form-control" placeholder="Enter your guess" min="1"
+                                    id="guessInput" disabled>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-sm px-3 btn-neutral d-flex align-items-center"
+                                    id="submitGuess" disabled>
+                                    <span>Check</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="btn-group my-3 w-full">
+                            <a href="#" class="btn btn-sm btn-neutral text-primary" aria-current="page"
+                                id="pausePlayButton">Play</a>
+                            <a href="#" class="btn btn-sm btn-neutral" id="hintButton">Hint</a>
+                            <a href="#" class="btn btn-sm btn-neutral">Logs</a>
+                            <a href="#" class="btn btn-sm btn-neutral">Achievements</a>
                         </div>
 
-                        <button id="submitGuess" class="btn btn-primary w-100" disabled>Submit Guess</button>
-                        <button id="pausePlayButton" class="btn btn-secondary w-100 mt-2">Play</button>
-                        <button id="hintButton" class="btn btn-warning w-100 mt-2" disabled>Get a Hint</button>
-                        <div id="message" class="mt-3 text-center"></div>
-                        <div id="guessedNumbers" class="guessed-numbers text-center"></div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <span class="d-block h6 text-heading mb-0">Status</span>
+                                    <span class="d-block text-sm text-muted" id="message">Press play to guess</span>
+                                </div>
+                                <div>
+                                    <span class="d-block h6 text-heading mb-0">Guessed Numbers</span>
+                                    <span class="d-block text-sm text-muted" id="guessedNumbers">N/A</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card shadow-sm mt-4">
@@ -70,7 +157,7 @@
 
                         <div class="achievement-item" data-achievement="luckyFirstTry">
                             <div class="d-flex align-items-center mb-2">
-                                <i class="ph ph-clover me-2 text-warning"></i>
+                                <i class="bi bi-trophy-fill me-2 text-warning"></i>
                                 <span>Lucky First Try</span>
                             </div>
                             <p class="ms-4 text-muted">Awarded for guessing the correct number on the first attempt.</p>
@@ -78,7 +165,7 @@
 
                         <div class="achievement-item" data-achievement="quickGuesser">
                             <div class="d-flex align-items-center mb-2">
-                                <i class="ph ph-clock-countdown me-2 text-warning"></i>
+                                <i class="bi bi-trophy-fill me-2 text-warning"></i>
                                 <span>Quick Guesser</span>
                             </div>
                             <p class="ms-4 text-muted">Complete a level in under 10 seconds.</p>
@@ -86,7 +173,7 @@
 
                         <div class="achievement-item" data-achievement="comebackKing">
                             <div class="d-flex align-items-center mb-2">
-                                <i class="ph ph-crown-simple me-2 text-warning"></i>
+                                <i class="bi bi-trophy-fill me-2 text-warning"></i>
                                 <span>Comeback King</span>
                             </div>
                             <p class="ms-4 text-muted">Win a level after being down to just one remaining attempt.</p>

@@ -37,8 +37,7 @@ function updateDashboard() {
     maxNumberElement.textContent = maxNumber;
     timeElapsedElement.textContent = elapsedTime;
     coinsElement.textContent = coins;
-    guessedNumbersElement.textContent = `Guessed Numbers: ${guessedNumbers.length > 0 ? guessedNumbers.join(", ") : "None yet"
-        }`;
+    guessedNumbersElement.textContent = guessedNumbers.length > 0 ? guessedNumbers.join(", ") : "Press play to guess";
 }
 
 function updateAchievements() {
@@ -182,12 +181,12 @@ submitButton.addEventListener("click", function () {
 
     if (isNaN(userGuess)) {
         messageElement.innerHTML =
-            '<div class="alert alert-warning">Please enter a valid number.</div>';
+            '<div class="text-orange-400">Please enter a valid number.</div>';
         return;
     }
 
     if (userGuess < 1 || userGuess > maxNumber) {
-        messageElement.innerHTML = `<div class="alert alert-warning">Your guess must be between 1 and ${maxNumber}.</div>`;
+        messageElement.innerHTML = `<div class="text-orange-400">Your guess must be between 1 and ${maxNumber}.</div>`;
     } else {
         guessedNumbers.push(userGuess);
         if (userGuess === randomNumber) {
@@ -207,7 +206,7 @@ submitButton.addEventListener("click", function () {
             );
             startNewLevel();
             messageElement.innerHTML =
-                '<div class="alert alert-info">New level started! Good luck!</div>';
+                '<div class="text-blue-400">New level started! Good luck!</div>';
             pausePlayButton.textContent = "Play";
             submitButton.disabled = true;
             document.getElementById("guessInput").disabled = true;
@@ -218,7 +217,7 @@ submitButton.addEventListener("click", function () {
             updateDashboard();
             if (attempts <= 0) {
                 messageElement.innerHTML =
-                    '<div class="alert alert-danger">Out of attempts! Restarting the level...</div>';
+                    '<div class="text-red-400">Out of attempts! Restarting the level...</div>';
                 stopTimer();
                 updateAchievements();
                 addLogEntry(
@@ -233,18 +232,15 @@ submitButton.addEventListener("click", function () {
                 );
                 restartLevel();
                 messageElement.innerHTML =
-                    '<div class="alert alert-info">Level restarted! Try again!</div>';
+                    '<div class="text-blue-400">Level restarted! Try again!</div>';
                 pausePlayButton.textContent = "Play";
                 submitButton.disabled = true;
                 document.getElementById("guessInput").disabled = true;
                 hintButton.disabled = true;
             } else {
-                messageElement.innerHTML = `
-                    <div class="alert alert-info">
-                        <div>${userGuess < randomNumber ? "Too low!" : "Too high!"
-                    }</div>
-                        <div>Attempts left: <strong>${attempts}</strong></div>
-                    </div>`;
+                messageElement.innerHTML = userGuess < randomNumber ? 
+                `<div class="text-indigo-400">Too low!</div>` : 
+                `<div class="text-pink-400">Too high!</div>`;
             }
         }
     }
@@ -257,7 +253,7 @@ hintButton.addEventListener("click", function () {
     }
     if (coins < 10) {
         messageElement.innerHTML =
-            '<div class="alert alert-warning">Not enough coins to use a hint.</div>';
+            '<div class="text-orange-400">Not enough coins to use a hint.</div>';
         return;
     }
     let confirmHint = confirm(
@@ -276,7 +272,7 @@ hintButton.addEventListener("click", function () {
             hintMessage =
                 randomNumber % 2 === 0 ? "The number is even." : "The number is odd.";
         }
-        messageElement.innerHTML = `<div class="alert alert-info">Hint: ${hintMessage}</div>`;
+        messageElement.innerHTML = `<div class="text-blue-400">Hint: ${hintMessage}</div>`;
     }
 });
 
