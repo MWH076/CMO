@@ -69,9 +69,7 @@ function updateAchievements() {
 		unlockAchievement("comebackKing");
 	}
 
-	elements.achievementBadge.textContent = `${
-		Object.values(unlockedAchievements).filter(Boolean).length
-	}/3`;
+	elements.achievementBadge.textContent = `${Object.values(unlockedAchievements).filter(Boolean).length}/3`;
 }
 
 function unlockAchievement(key) {
@@ -85,25 +83,24 @@ function unlockAchievement(key) {
 }
 
 function addLogEntry(status) {
-	const logDiv = document.createElement("div");
-	logDiv.classList.add("border", "rounded", "p-2", "mb-2");
-	logDiv.innerHTML = `
-        <div><strong>Level:</strong> ${level}</div>
-        <div><strong>Number Range:</strong> 1 to ${maxNumber}</div>
-        <div><strong>Attempts Given:</strong> ${4 + level - 1}</div>
-        <div><strong>Total Attempts Used:</strong> ${totalAttempts}</div>
-        <div><strong>Guessed Numbers:</strong> ${
-									guessedNumbers.join(", ") || "None"
-								}</div>
-        <div><strong>Correct Number:</strong> ${randomNumber}</div>
-        <div><strong>Status:</strong> ${status}</div>
-        <div><strong>Time Elapsed:</strong> ${elapsedTime} s</div>
-        <div><strong>Hint Used:</strong> ${hintUsed ? "Yes" : "No"}</div>
-        ${hintUsed ? `<div><strong>Hint:</strong> ${hintMessage}</div>` : ""}
+	const row = document.createElement("tr");
+
+	row.innerHTML = `
+        <td>${level}</td>
+        <td>1 to ${maxNumber}</td>
+        <td>${totalAttempts} / ${4 + level - 1}</td>
+        <td>${guessedNumbers.join(", ") || "None"}</td>
+        <td>${randomNumber}</td>
+        <td>${elapsedTime} s</td>
+        <td>${status === "Won"
+			? '<span class="badge badge-lg badge-dot"><i class="bg-success"></i>Won</span>'
+			: '<span class="badge badge-lg badge-dot"><i class="bg-danger"></i>Lost</span>'
+		}</td>
+        <td>${hintUsed ? "Yes" : "No"}</td>
+        <td>${hintUsed ? hintMessage : ""}</td>
     `;
-	elements.log.appendChild(logDiv);
-	if (elements.log.firstChild.textContent === "No attempts made yet.")
-		elements.log.firstChild.remove();
+
+	elements.log.querySelector("tbody").appendChild(row);
 	elements.log.scrollTop = elements.log.scrollHeight;
 }
 
@@ -229,12 +226,12 @@ function handleHint() {
 		hintMessage =
 			randomNumber >= 10
 				? `The number is between ${Math.max(1, randomNumber - 10)} and ${Math.min(
-						maxNumber,
-						randomNumber + 10
-				  )}`
+					maxNumber,
+					randomNumber + 10
+				)}`
 				: randomNumber % 2 === 0
-				? "The number is even."
-				: "The number is odd.";
+					? "The number is even."
+					: "The number is odd.";
 		displayMessage(`Hint: ${hintMessage}`, "blue");
 		updateDashboard();
 	}
