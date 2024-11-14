@@ -28,7 +28,7 @@ const elements = {
 	guessedNumbers: document.getElementById("guessedNumbers"),
 	timeElapsed: document.getElementById("timeElapsed"),
 	pausePlayButton: document.getElementById("pausePlayButton"),
-	achievementBadge: document.querySelector(".badge.bg-success.float-end"),
+	achievementBadge: document.getElementById("unlockedAchievements"),
 	coins: document.getElementById("coins"),
 	hintButton: document.getElementById("hintButton"),
 	guessInput: document.getElementById("guessInput")
@@ -80,10 +80,7 @@ function updateAchievements() {
 		unlockAchievement("lazyGuessAward");
 	}
 
-	if (
-		!unlockedAchievements.grandmaSpeed &&
-		elapsedTime > 30
-	) {
+	if (!unlockedAchievements.grandmaSpeed && elapsedTime > 30) {
 		unlockAchievement("grandmaSpeed");
 	}
 
@@ -104,7 +101,7 @@ function unlockAchievement(key) {
 	const achievementElement = document.querySelector(
 		`.achievement-item[data-achievement='${key}']`
 	);
-	if (achievementElement) achievementElement.classList.add("font-serif");
+	if (achievementElement) achievementElement.classList.add("bg-green-500");
 }
 
 function addLogEntry(status) {
@@ -222,7 +219,7 @@ function displayMessage(text, color) {
 
 function winLevel() {
 	stopTimer();
-	coins += level * 10;
+	coins += 5;
 	updateAchievements();
 	addLogEntry("Won");
 	startNewLevel();
@@ -232,6 +229,7 @@ function winLevel() {
 
 function loseLevel() {
 	stopTimer();
+	coins -= 5;
 	updateAchievements();
 	addLogEntry("Lost");
 	restartLevel();
