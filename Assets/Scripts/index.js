@@ -50,48 +50,22 @@ function updateDashboard() {
 }
 
 function updateAchievements() {
-	if (
-		!unlockedAchievements.luckyFirstTry &&
-		guessedNumbers.length === 1 &&
-		guessedNumbers[0] === randomNumber
-	) {
-		unlockAchievement("luckyFirstTry");
-	}
-	if (
-		!unlockedAchievements.quickGuesser &&
-		elapsedTime <= 10 &&
-		guessedNumbers.includes(randomNumber)
-	) {
-		unlockAchievement("quickGuesser");
-	}
-	if (
-		!unlockedAchievements.comebackKing &&
-		attempts === 1 &&
-		guessedNumbers.slice(-1)[0] === randomNumber
-	) {
-		unlockAchievement("comebackKing");
-	}
+	const achievementConditions = [
+		{ key: "luckyFirstTry", condition: () => guessedNumbers.length === 1 && guessedNumbers[0] === randomNumber },
+		{ key: "quickGuesser", condition: () => elapsedTime <= 10 && guessedNumbers.includes(randomNumber) },
+		{ key: "comebackKing", condition: () => attempts === 1 && guessedNumbers.slice(-1)[0] === randomNumber },
+		{ key: "lazyGuessAward", condition: () => hintUsed },
+		{ key: "grandmaSpeed", condition: () => elapsedTime > 30 },
+		{ key: "soCloseYetSoFar", condition: () => Math.abs(guessedNumbers.slice(-1)[0] - randomNumber) === 1 }
+	];
 
-	if (
-		!unlockedAchievements.lazyGuessAward &&
-		hintUsed
-	) {
-		unlockAchievement("lazyGuessAward");
-	}
+	achievementConditions.forEach(({ key, condition }) => {
+		if (!unlockedAchievements[key] && condition()) {
+			unlockAchievement(key);
+		}
+	});
 
-	if (!unlockedAchievements.grandmaSpeed && elapsedTime > 30) {
-		unlockAchievement("grandmaSpeed");
-	}
-
-	if (
-		!unlockedAchievements.soCloseYetSoFar &&
-		Math.abs(guessedNumbers.slice(-1)[0] - randomNumber) === 1
-	) {
-		unlockAchievement("soCloseYetSoFar");
-	}
-
-	elements.achievementBadge.textContent = `${Object.values(unlockedAchievements).filter(Boolean).length
-		}/${Object.keys(unlockedAchievements).length}`;
+	elements.achievementBadge.textContent = `${Object.values(unlockedAchievements).filter(Boolean).length}/${Object.keys(unlockedAchievements).length}`;
 }
 
 function unlockAchievement(key) {
@@ -239,24 +213,48 @@ function loseLevel() {
 function handleHint() {
 	if (hintUsed || coins < 10) return;
 
-	if (
-		confirm("Are you sure you want to use a hint? It will cost you 10 coins.")
-	) {
+	if (confirm("Are you sure you want to use a hint? It will cost you 10 coins.")) {
 		coins -= 10;
 		hintUsed = true;
 		elements.hintButton.disabled = true;
-		hintMessage =
-			randomNumber >= 10
-				? `The number is between ${Math.max(1, randomNumber - 10)} and ${Math.min(
-					maxNumber,
-					randomNumber + 10
-				)}`
-				: randomNumber % 2 === 0
-					? "The number is even."
-					: "The number is odd.";
+
+		hintMessage = generateHint();
 		displayMessage(`Hint: ${hintMessage}`, "blue");
 		updateDashboard();
 	}
+}
+
+function generateHint() {
+	const hintType = Math.floor(Math.random() * 4);
+	let hint = "";
+
+	switch (hintType) {
+		case 0:
+			const offset = Math.floor(maxNumber / 3);
+			const lowerBound = Math.max(1, randomNumber - Math.floor(Math.random() * offset));
+			const upperBound = Math.min(maxNumber, randomNumber + Math.floor(Math.random() * offset));
+			hint = `The number is between ${lowerBound} and ${upperBound}.`;
+			break;
+
+		case 1:
+			hint = randomNumber % 2 === 0 ? "The number is even." : "The number is odd.";
+			break;
+
+		case 2:
+			if (randomNumber % 3 === 0) {
+				hint = "The number is divisible by 3.";
+			} else if (randomNumber % 5 === 0) {
+				hint = "The number is divisible by 5.";
+			} else {
+				hint = "The number is not divisible by 3 or 5.";
+			}
+			break;
+
+		case 3:
+			hint = randomNumber <= maxNumber / 2 ? "The number is closer to the start of the range." : "The number is closer to the end of the range.";
+			break;
+	}
+	return hint;
 }
 
 updateDashboard();
