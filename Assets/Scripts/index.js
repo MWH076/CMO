@@ -74,8 +74,7 @@ function updateAchievements() {
 
 	if (
 		!unlockedAchievements.lazyGuessAward &&
-		hintUsed &&
-		guessedNumbers.length === 0
+		hintUsed
 	) {
 		unlockAchievement("lazyGuessAward");
 	}
