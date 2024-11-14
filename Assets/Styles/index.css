@@ -2,28 +2,5 @@
 
 body {
     font-family: "Open Sans", serif;
-    background-color: #e8e8e8;
-}
-
-.dashboard-card {
-    margin-bottom: 1rem;
-}
-
-.log-area {
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.status-info {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-}
-
-.status-info .badge {
-    margin-bottom: 0.5rem;
-}
-
-.achievement-card {
-    margin-top: 1rem;
+    background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
 }
