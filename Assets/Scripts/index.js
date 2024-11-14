@@ -12,7 +12,10 @@ let level = 1,
 const unlockedAchievements = {
 	luckyFirstTry: false,
 	quickGuesser: false,
-	comebackKing: false
+	comebackKing: false,
+	lazyGuessAward: false,
+	grandmaSpeed: false,
+	soCloseYetSoFar: false
 };
 
 const elements = {
@@ -69,7 +72,30 @@ function updateAchievements() {
 		unlockAchievement("comebackKing");
 	}
 
-	elements.achievementBadge.textContent = `${Object.values(unlockedAchievements).filter(Boolean).length}/3`;
+	if (
+		!unlockedAchievements.lazyGuessAward &&
+		hintUsed &&
+		guessedNumbers.length === 0
+	) {
+		unlockAchievement("lazyGuessAward");
+	}
+
+	if (
+		!unlockedAchievements.grandmaSpeed &&
+		elapsedTime > 30
+	) {
+		unlockAchievement("grandmaSpeed");
+	}
+
+	if (
+		!unlockedAchievements.soCloseYetSoFar &&
+		Math.abs(guessedNumbers.slice(-1)[0] - randomNumber) === 1
+	) {
+		unlockAchievement("soCloseYetSoFar");
+	}
+
+	elements.achievementBadge.textContent = `${Object.values(unlockedAchievements).filter(Boolean).length
+		}/${Object.keys(unlockedAchievements).length}`;
 }
 
 function unlockAchievement(key) {
@@ -78,8 +104,7 @@ function unlockAchievement(key) {
 	const achievementElement = document.querySelector(
 		`.achievement-item[data-achievement='${key}']`
 	);
-	if (achievementElement)
-		achievementElement.classList.add("text-decoration-line-through");
+	if (achievementElement) achievementElement.classList.add("font-serif");
 }
 
 function addLogEntry(status) {
