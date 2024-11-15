@@ -51,12 +51,37 @@ function updateDashboard() {
 
 function updateAchievements() {
 	const achievementConditions = [
-		{ key: "luckyFirstTry", condition: () => guessedNumbers.length === 1 && guessedNumbers[0] === randomNumber },
-		{ key: "quickGuesser", condition: () => elapsedTime <= 10 && guessedNumbers.includes(randomNumber) },
-		{ key: "comebackKing", condition: () => attempts === 1 && guessedNumbers.slice(-1)[0] === randomNumber },
+		{
+			key: "luckyFirstTry",
+			condition: () =>
+				guessedNumbers.length === 1 && guessedNumbers[0] === randomNumber
+		},
+		{
+			key: "quickGuesser",
+			condition: () => elapsedTime <= 10 && guessedNumbers.includes(randomNumber)
+		},
+		{
+			key: "turboToddler",
+			condition: () => elapsedTime <= 5 && guessedNumbers.includes(randomNumber)
+		},
+		{
+			key: "comebackKing",
+			condition: () =>
+				attempts === 1 && guessedNumbers.slice(-1)[0] === randomNumber
+		},
 		{ key: "lazyGuessAward", condition: () => hintUsed },
-		{ key: "grandmaSpeed", condition: () => elapsedTime > 30 },
-		{ key: "soCloseYetSoFar", condition: () => Math.abs(guessedNumbers.slice(-1)[0] - randomNumber) === 1 }
+		{
+			key: "grandmaSpeed",
+			condition: () => elapsedTime > 30 && guessedNumbers.includes(randomNumber)
+		},
+		{
+			key: "afkModeActivated",
+			condition: () => elapsedTime > 120 && guessedNumbers.includes(randomNumber)
+		},
+		{
+			key: "soCloseYetSoFar",
+			condition: () => Math.abs(guessedNumbers.slice(-1)[0] - randomNumber) === 1
+		}
 	];
 
 	achievementConditions.forEach(({ key, condition }) => {
@@ -65,7 +90,8 @@ function updateAchievements() {
 		}
 	});
 
-	elements.achievementBadge.textContent = `${Object.values(unlockedAchievements).filter(Boolean).length}/${Object.keys(unlockedAchievements).length}`;
+	elements.achievementBadge.textContent = `${Object.values(unlockedAchievements).filter(Boolean).length
+		}/${Object.keys(unlockedAchievements).length}`;
 }
 
 function unlockAchievement(key) {
@@ -213,7 +239,9 @@ function loseLevel() {
 function handleHint() {
 	if (hintUsed || coins < 10) return;
 
-	if (confirm("Are you sure you want to use a hint? It will cost you 10 coins.")) {
+	if (
+		confirm("Are you sure you want to use a hint? It will cost you 10 coins.")
+	) {
 		coins -= 10;
 		hintUsed = true;
 		elements.hintButton.disabled = true;
@@ -231,8 +259,14 @@ function generateHint() {
 	switch (hintType) {
 		case 0:
 			const offset = Math.floor(maxNumber / 3);
-			const lowerBound = Math.max(1, randomNumber - Math.floor(Math.random() * offset));
-			const upperBound = Math.min(maxNumber, randomNumber + Math.floor(Math.random() * offset));
+			const lowerBound = Math.max(
+				1,
+				randomNumber - Math.floor(Math.random() * offset)
+			);
+			const upperBound = Math.min(
+				maxNumber,
+				randomNumber + Math.floor(Math.random() * offset)
+			);
 			hint = `The number is between ${lowerBound} and ${upperBound}.`;
 			break;
 
@@ -251,7 +285,10 @@ function generateHint() {
 			break;
 
 		case 3:
-			hint = randomNumber <= maxNumber / 2 ? "The number is closer to the start of the range." : "The number is closer to the end of the range.";
+			hint =
+				randomNumber <= maxNumber / 2
+					? "The number is closer to the start of the range."
+					: "The number is closer to the end of the range.";
 			break;
 	}
 	return hint;
