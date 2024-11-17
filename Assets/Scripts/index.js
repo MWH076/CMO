@@ -9,14 +9,88 @@ let level = 1,
 	hintMessage = "",
 	elapsedTime = 0;
 
-const unlockedAchievements = {
-	luckyFirstTry: false,
-	quickGuesser: false,
-	comebackKing: false,
-	lazyGuessAward: false,
-	grandmaSpeed: false,
-	soCloseYetSoFar: false
-};
+const achievements = [
+	{
+		id: 'luckyFirstTry',
+		name: 'Lucky First Try',
+		description: 'Awarded for guessing the correct number on the first attempt.',
+		icon: '<i class="ph ph-clover"></i>',
+		condition: function () {
+			return guessedNumbers.length === 1 && guessedNumbers[0] === randomNumber;
+		},
+		unlockedAt: null
+	},
+	{
+		id: 'quickGuesser',
+		name: 'Quick Guesser',
+		description: 'Complete a level in under 10 seconds.',
+		icon: '<i class="ph ph-clock-countdown"></i>',
+		condition: function () {
+			return elapsedTime <= 10 && guessedNumbers.includes(randomNumber);
+		},
+		unlockedAt: null
+	},
+	{
+		id: 'turboToddler',
+		name: 'Turbo Toddler',
+		description: 'Complete a level in under 5 seconds.',
+		icon: '<i class="ph ph-baby"></i>',
+		condition: function () {
+			return elapsedTime <= 5 && guessedNumbers.includes(randomNumber);
+		},
+		unlockedAt: null
+	},
+	{
+		id: 'comebackKing',
+		name: 'Comeback King',
+		description: 'Win a level after being down to just one remaining attempt.',
+		icon: '<i class="ph ph-crown-simple"></i>',
+		condition: function () {
+			return attempts === 1 && guessedNumbers.slice(-1)[0] === randomNumber;
+		},
+		unlockedAt: null
+	},
+	{
+		id: 'lazyGuessAward',
+		name: 'The ‘I’m Too Lazy to Guess’ Award',
+		description: 'Use your first hint to get a little help on your guessing journey.',
+		icon: '<i class="ph ph-moon-stars"></i>',
+		condition: function () {
+			return hintUsed;
+		},
+		unlockedAt: null
+	},
+	{
+		id: 'grandmaSpeed',
+		name: 'Grandma Speed',
+		description: 'Complete a level in more than 30 seconds.',
+		icon: '<i class="ph ph-clock-clockwise"></i>',
+		condition: function () {
+			return elapsedTime > 30 && guessedNumbers.includes(randomNumber);
+		},
+		unlockedAt: null
+	},
+	{
+		id: 'soCloseYetSoFar',
+		name: 'So Close, Yet So Far',
+		description: 'Make a guess that is off by only one number.',
+		icon: '<i class="ph ph-smiley-x-eyes"></i>',
+		condition: function () {
+			return Math.abs(guessedNumbers.slice(-1)[0] - randomNumber) === 1;
+		},
+		unlockedAt: null
+	},
+	{
+		id: 'afkModeActivated',
+		name: 'AFK Mode Activated',
+		description: 'Complete a level in more than 2 minutes.',
+		icon: '<i class="ph ph-keyboard"></i>',
+		condition: function () {
+			return elapsedTime > 120 && guessedNumbers.includes(randomNumber);
+		},
+		unlockedAt: null
+	}
+];
 
 const elements = {
 	message: document.getElementById("message"),
@@ -47,60 +121,64 @@ function updateDashboard() {
 	elements.guessedNumbers.textContent = guessedNumbers.length
 		? guessedNumbers.join(", ")
 		: "Press play to guess";
+	elements.achievementBadge.textContent = `${achievements.filter(a => a.unlockedAt !== null).length}/${achievements.length}`;
+	renderAchievements();
 }
 
 function updateAchievements() {
-	const achievementConditions = [
-		{
-			key: "luckyFirstTry",
-			condition: () =>
-				guessedNumbers.length === 1 && guessedNumbers[0] === randomNumber
-		},
-		{
-			key: "quickGuesser",
-			condition: () => elapsedTime <= 10 && guessedNumbers.includes(randomNumber)
-		},
-		{
-			key: "turboToddler",
-			condition: () => elapsedTime <= 5 && guessedNumbers.includes(randomNumber)
-		},
-		{
-			key: "comebackKing",
-			condition: () =>
-				attempts === 1 && guessedNumbers.slice(-1)[0] === randomNumber
-		},
-		{ key: "lazyGuessAward", condition: () => hintUsed },
-		{
-			key: "grandmaSpeed",
-			condition: () => elapsedTime > 30 && guessedNumbers.includes(randomNumber)
-		},
-		{
-			key: "afkModeActivated",
-			condition: () => elapsedTime > 120 && guessedNumbers.includes(randomNumber)
-		},
-		{
-			key: "soCloseYetSoFar",
-			condition: () => Math.abs(guessedNumbers.slice(-1)[0] - randomNumber) === 1
-		}
-	];
-
-	achievementConditions.forEach(({ key, condition }) => {
-		if (!unlockedAchievements[key] && condition()) {
-			unlockAchievement(key);
+	achievements.forEach(achievement => {
+		if (!achievement.unlockedAt && achievement.condition()) {
+			unlockAchievement(achievement);
 		}
 	});
 
-	elements.achievementBadge.textContent = `${Object.values(unlockedAchievements).filter(Boolean).length
-		}/${Object.keys(unlockedAchievements).length}`;
+	elements.achievementBadge.textContent = `${achievements.filter(a => a.unlockedAt !== null).length}/${achievements.length}`;
+	renderAchievements();
 }
 
-function unlockAchievement(key) {
-	unlockedAchievements[key] = true;
+function unlockAchievement(achievement) {
+	achievement.unlockedAt = new Date();
 	coins += 20;
-	const achievementElement = document.querySelector(
-		`.achievement-item[data-achievement='${key}']`
-	);
-	if (achievementElement) achievementElement.classList.add("bg-green-500");
+}
+
+function renderAchievements() {
+	const achievementsContainer = document.getElementById('achievementsContainer');
+	achievementsContainer.innerHTML = ''; // Clear existing content
+
+	achievements.forEach(achievement => {
+		const card = document.createElement('div');
+		card.className = 'card shadow-4-hover my-3';
+
+		const unlockedClass = achievement.unlockedAt ? 'bg-green-500' : 'bg-gray-400';
+		const unlockedDate = achievement.unlockedAt
+			? `<div class="text-xs text-muted">Unlocked on: ${formatDate(achievement.unlockedAt)}</div>`
+			: '';
+
+		card.innerHTML = `
+            <div class="card-body pb-5">
+                <div class="d-flex align-items-center">
+                    <div class="achievement-item icon icon-shape rounded-2 text-lg ${unlockedClass} text-white me-3">
+                        ${achievement.icon}
+                    </div>
+                    <div class="flex-1">
+                        <span class="d-block font-semibold text-sm text-heading">${achievement.name}</span>
+                        <div class="text-xs text-muted">${achievement.description}</div>
+                        ${unlockedDate}
+                    </div>
+                </div>
+            </div>
+        `;
+
+		achievementsContainer.appendChild(card);
+	});
+}
+
+function formatDate(date) {
+	const options = {
+		month: '2-digit', day: '2-digit', year: '2-digit',
+		hour: '2-digit', minute: '2-digit', second: '2-digit'
+	};
+	return date.toLocaleDateString('en-US', options);
 }
 
 function addLogEntry(status) {
