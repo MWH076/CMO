@@ -148,12 +148,10 @@
                                     <th scope="col">Level</th>
                                     <th scope="col">Range</th>
                                     <th scope="col">Moves</th>
-                                    <th scope="col">Guesses</th>
-                                    <th scope="col">Correct #</th>
                                     <th scope="col">Time</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Hint Used</th>
-                                    <th scope="col">Hint</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -202,6 +200,33 @@
             </div>
 
             <div id="achievementsContainer"></div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end w-full" tabindex="-1" id="details">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Level Attempt Details</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="card my-3">
+                <div class="card-body pb-5">
+                    <span class="d-block font-semibold text-sm text-heading">Guessed Numbers</span>
+                    <div class="text-xs text-muted" id="detailGuessedNumbers"></div>
+                </div>
+            </div>
+            <div class="card my-3">
+                <div class="card-body pb-5">
+                    <span class="d-block font-semibold text-sm text-heading">Correct Number</span>
+                    <div class="text-xs text-muted" id="detailCorrectNumber"></div>
+                </div>
+            </div>
+            <div class="card my-3" id="hintCard">
+                <div class="card-body pb-5">
+                    <span class="d-block font-semibold text-sm text-heading">Hint Given</span>
+                    <div class="text-xs text-muted" id="detailHintMessage"></div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

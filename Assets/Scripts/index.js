@@ -188,20 +188,48 @@ function addLogEntry(status) {
         <td>${level}</td>
         <td>1 to ${maxNumber}</td>
         <td>${totalAttempts} / ${4 + level - 1}</td>
-        <td>${guessedNumbers.join(", ") || "None"}</td>
-        <td>${randomNumber}</td>
         <td>${elapsedTime} s</td>
         <td>${status === "Won"
             ? '<span class="badge badge-lg badge-dot"><i class="bg-success"></i>Won</span>'
             : '<span class="badge badge-lg badge-dot"><i class="bg-danger"></i>Lost</span>'
         }</td>
         <td>${hintUsed ? "Yes" : "No"}</td>
-        <td>${hintUsed ? hintMessage : ""}</td>
+        <td class="text-end">
+            <button type="button" class="btn btn-sm btn-square btn-neutral text-primary-hover details-button"
+                data-bs-toggle="offcanvas" data-bs-target="#details"
+                data-guessed-numbers="${guessedNumbers.join(', ')}"
+                data-correct-number="${randomNumber}"
+                data-hint-message="${hintUsed ? hintMessage : ''}"
+                data-hint-used="${hintUsed}"
+            >
+                <i class="bi bi-box"></i>
+            </button>
+        </td>
     `;
 
     elements.log.querySelector("tbody").appendChild(row);
-    elements.log.scrollTop = elements.log.scrollHeight;
 }
+
+
+document.addEventListener('click', function (event) {
+    if (event.target.closest('.details-button')) {
+        const button = event.target.closest('.details-button');
+        const guessedNumbers = button.getAttribute('data-guessed-numbers');
+        const correctNumber = button.getAttribute('data-correct-number');
+        const hintUsed = button.getAttribute('data-hint-used') === 'true';
+        const hintMessage = button.getAttribute('data-hint-message');
+        document.getElementById('detailGuessedNumbers').textContent = guessedNumbers || 'None';
+        document.getElementById('detailCorrectNumber').textContent = correctNumber || 'N/A';
+
+        if (hintUsed) {
+            document.getElementById('hintCard').style.display = 'block';
+            document.getElementById('detailHintMessage').textContent = hintMessage;
+        } else {
+            document.getElementById('hintCard').style.display = 'none';
+        }
+    }
+});
+
 
 let timerInterval;
 
@@ -319,7 +347,7 @@ function handleHint() {
     coins -= 10;
     hintUsed = true;
     elements.hintButton.disabled = true;
-    const hintMessage = generateHint();
+    hintMessage = generateHint();
     displayMessage(`Hint: ${hintMessage}`, "blue");
     updateDashboard();
 }
